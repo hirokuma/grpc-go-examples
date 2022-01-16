@@ -73,7 +73,18 @@ $
 
 ----
 
-## Regenerate gRPC code
+### Tutorial 2
+
+#### Update the gRPC service
+
+[reference](https://grpc.io/docs/languages/go/quickstart/#update-the-grpc-service)
+
+
+```bash
+$ vi proto/helloworld.proto
+```
+
+#### Regenerate gRPC code
 
 [reference](https://grpc.io/docs/languages/go/quickstart/#regenerate-grpc-code)
 
@@ -82,3 +93,34 @@ cd proto
 ./gen_proto.sh
 ```
 
+#### Update and run the application
+
+[reference](https://grpc.io/docs/languages/go/quickstart/#update-and-run-the-application)
+
+
+terminal: server
+
+```bash
+$ go run greeter_server/main.go
+```
+
+terminal client
+
+```bash
+$ go run greeter_client/main.go
+```
+
+result
+
+```bash
+$ go run greeter_server/main.go 
+2022/01/16 12:20:07 server listening at 127.0.0.1:50051
+2022/01/16 12:20:45 Received: world
+```
+
+```bash
+$ go run greeter_client/main.go 
+2022/01/16 12:20:45 Greeting: Hello world
+2022/01/16 12:20:45 Greeting: Hello again world
+$
+```
