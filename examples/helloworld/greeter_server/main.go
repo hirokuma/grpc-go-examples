@@ -26,8 +26,8 @@ import (
 	"log"
 	"net"
 
-	"google.golang.org/grpc"
 	pb "github.com/hirokuma/grpc-go-examples/helloworld/proto"
+	"google.golang.org/grpc"
 )
 
 var (
@@ -47,7 +47,7 @@ func (s *server) SayHello(ctx context.Context, in *pb.HelloRequest) (*pb.HelloRe
 
 // SayHelloAgain implements helloworld.GreeterServer
 func (s *server) SayHelloAgain(ctx context.Context, in *pb.HelloRequest) (*pb.HelloReply, error) {
-        return &pb.HelloReply{Message: "Hello again " + in.GetName()}, nil
+	return &pb.HelloReply{Message: "Hello again " + in.GetName()}, nil
 }
 
 func main() {
