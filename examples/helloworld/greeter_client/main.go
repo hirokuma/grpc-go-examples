@@ -21,27 +21,51 @@ package main
 
 import (
 	"context"
+	"crypto/tls"
+	"crypto/x509"
 	"flag"
+	"io/ioutil"
 	"log"
 	"time"
 
 	pb "github.com/hirokuma/grpc-go-examples/helloworld/proto"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials"
 )
 
 const (
+	caCertFile  = "../cert/ca-cert.pem"
 	defaultName = "world"
+	serverAddr  = "127.0.0.1:4000"
 )
 
 var (
-	addr = flag.String("addr", "localhost:50051", "the address to connect to")
+	addr = flag.String("addr", serverAddr, "the address to connect to")
 	name = flag.String("name", defaultName, "Name to greet")
 )
 
 func main() {
 	flag.Parse()
+
+	// Create a certificate pool from the certificate authority
+	certPool := x509.NewCertPool()
+	ca, err := ioutil.ReadFile(caCertFile)
+	if err != nil {
+		log.Fatalf("could not read ca certificate: %s", err)
+	}
+
+	// Append the client certificates from the CA
+	if ok := certPool.AppendCertsFromPEM(ca); !ok {
+		log.Fatalf("failed to append client certs")
+	}
+
+	creds := credentials.NewTLS(&tls.Config{
+		ServerName: "localhost", // NOTE: this is required!
+		RootCAs:    certPool,
+	})
+
 	// Set up a connection to the server.
-	conn, err := grpc.Dial(*addr, grpc.WithInsecure())
+	conn, err := grpc.Dial(*addr, grpc.WithTransportCredentials(creds))
 	if err != nil {
 		log.Fatalf("did not connect: %v", err)
 	}
